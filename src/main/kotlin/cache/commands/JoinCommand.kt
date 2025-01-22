@@ -34,6 +34,7 @@ suspend fun join(interactionEvent: ChatInputCommandInteractionCreateEvent) {
                     color = Color(255, 0, 0)
                 }
             }
+            return@use
         }
 
         val response = interaction.deferPublicResponse()
