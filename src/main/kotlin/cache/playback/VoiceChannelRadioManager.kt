@@ -58,4 +58,8 @@ class VoiceChannelRadioManager(private val voiceChannel: BaseVoiceChannelBehavio
         val newTrack = playlistManager.nextSong()
         lavaplayerManager.playTrack(newTrack.second.fileName, player!!)
     }
+
+    suspend fun dispose() {
+        connection!!.shutdown()
+    }
 }
