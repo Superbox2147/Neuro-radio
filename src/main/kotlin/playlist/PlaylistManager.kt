@@ -63,13 +63,32 @@ class PlaylistManager(cacheManager: CacheManager) {
         }
         if (priorityQueue.isNotEmpty()) {
             stringBuilder.append("\n\nPriority queue:")
-            for (i in priorityQueue.reversed()) {
-                stringBuilder.append("\n${ when(i.first) {
-                    CacheType.Neuro -> "Neuro-sama: "
-                    CacheType.Evil -> "Evil Neuro: "
-                    CacheType.Duet -> "Neuro duet: "
-                    CacheType.OtherDuet -> "Other duet: "
-                }}${i.second.name}")
+            if (priorityQueue.size <= 10) {
+                for (i in priorityQueue.reversed()) {
+                    stringBuilder.append(
+                        "\n${
+                            when (i.first) {
+                                CacheType.Neuro -> "Neuro-sama: "
+                                CacheType.Evil -> "Evil Neuro: "
+                                CacheType.Duet -> "Neuro duet: "
+                                CacheType.OtherDuet -> "Other duet: "
+                            }
+                        }${i.second.name}"
+                    )
+                }
+            } else {
+                for (i in 0..<10) {
+                    stringBuilder.append(
+                        "\n${
+                            when (priorityQueue.reversed()[i].first) {
+                                CacheType.Neuro -> "Neuro-sama: "
+                                CacheType.Evil -> "Evil Neuro: "
+                                CacheType.Duet -> "Neuro duet: "
+                                CacheType.OtherDuet -> "Other duet: "
+                            }
+                        }${priorityQueue.reversed()[i].second.name}"
+                    )
+                }
             }
         }
         stringBuilder.append("\n\nCurrently playing:\n${ when(currentlyPlaying.first) {
