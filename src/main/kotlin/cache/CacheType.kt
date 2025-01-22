@@ -7,6 +7,6 @@ enum class CacheType {
     OtherDuet;
 
     companion object {
-        fun random(): CacheType = listOf(Neuro, Evil, Duet, OtherDuet).random()
+        fun random(): CacheType = listOf(Neuro, Neuro, Neuro, Neuro, Evil, Evil, Evil, Evil, Duet, Duet, OtherDuet).random()
     }
 }

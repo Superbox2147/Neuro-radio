@@ -1,11 +1,19 @@
 package org.whatever
 
+import dev.kord.common.Color
 import dev.kord.common.entity.ChannelType
+import dev.kord.common.entity.Choice
+import dev.kord.common.entity.InteractionType
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
+import dev.kord.core.event.Event
+import dev.kord.core.event.interaction.ActionInteractionCreateEvent
 import dev.kord.core.event.interaction.ChatInputCommandInteractionCreateEvent
+import dev.kord.core.event.interaction.ModalSubmitInteractionCreateEvent
+import dev.kord.core.event.interaction.SelectMenuInteractionCreateEvent
 import dev.kord.core.on
 import dev.kord.rest.builder.interaction.string
+import dev.kord.rest.builder.message.embed
 import kotlinx.coroutines.runBlocking
 import org.whatever.cache.commands.*
 import kotlin.system.exitProcess
@@ -43,6 +51,28 @@ suspend fun setSlashCommands(kord: Kord) {
         ) {
             required = true
         }
+        string(
+            "song-type",
+            "Weather to look for Neuro or Evil covers, Neuro x Evil duets or other duets"
+        ) {
+            required = true
+            choice(
+                "neuro",
+                "neuro"
+            )
+            choice(
+                "evil",
+                "evil"
+            )
+             choice(
+                 "neuro-duet",
+                 "duet"
+             )
+            choice(
+                "other-duet",
+                "other"
+            )
+        }
     }
     kord.createGlobalChatInputCommand(
         "search",
@@ -53,6 +83,28 @@ suspend fun setSlashCommands(kord: Kord) {
             "Song query"
         ) {
             required = true
+        }
+        string(
+            "song-type",
+            "Weather to look for Neuro or Evil covers, Neuro x Evil duets or other duets"
+        ) {
+            required = true
+            choice(
+                "neuro",
+                "neuro"
+            )
+            choice(
+                "evil",
+                "evil"
+            )
+            choice(
+                "neuro-duet",
+                "duet"
+            )
+            choice(
+                "other-duet",
+                "other"
+            )
         }
     }
     kord.createGlobalChatInputCommand(
@@ -79,6 +131,26 @@ suspend fun setCommandListeners(kord: Kord) {
                 "queue" -> queue(this)
                 "search" -> search(this)
                 "skip" -> skip(this)
+            }
+        } catch (e: Exception) {
+            println(e.toString())
+            e.printStackTrace()
+        }
+    }
+    kord.on<SelectMenuInteractionCreateEvent> {
+        try {
+            val songName = interaction.values[0]
+            val type = interaction.data.data.customId.value?.removeSuffix("-selection")?.let { stringToCacheType(it) }
+            type!!
+            val song = cacheManager[type].getByName(songName)
+            playlistManager.addPriority(Pair(type, song!!))
+            val response = interaction.deferPublicResponse()
+            response.respond {
+                embed {
+                    title = "Song added"
+                    description = "Song $songName added to priority queue"
+                    color = Color(0, 127, 255)
+                }
             }
         } catch (e: Exception) {
             println(e.toString())

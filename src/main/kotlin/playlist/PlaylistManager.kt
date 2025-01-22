@@ -19,12 +19,20 @@ class PlaylistManager(cacheManager: CacheManager) {
         currentlyPlaying = cacheManager.random()
     }
 
-    fun addQueue(song: Pair<CacheType, CacheEntry>) {
+    private fun addQueue(song: Pair<CacheType, CacheEntry>) {
         queue.addLast(song)
     }
 
     fun addPriority(song: Pair<CacheType, CacheEntry>) {
         priorityQueue.addLast(song)
+    }
+
+    private fun getSongNotInQueue(): Pair<CacheType, CacheEntry> {
+        var newSong = cacheManager.random()
+        while (queue.contains(newSong)) {
+            newSong = cacheManager.random()
+        }
+        return newSong
     }
 
     fun nextSong(): Pair<CacheType, CacheEntry> {
@@ -35,7 +43,8 @@ class PlaylistManager(cacheManager: CacheManager) {
         } else {
             val nextSong = queue[0]
             queue.removeFirst()
-            addQueue(cacheManager.random())
+            val newSong = getSongNotInQueue()
+            addQueue(newSong)
             nextSong
         }
         return currentlyPlaying
@@ -63,7 +72,7 @@ class PlaylistManager(cacheManager: CacheManager) {
                 }}${i.second.name}")
             }
         }
-        stringBuilder.append("\nCurrently playing:\n${ when(currentlyPlaying.first) {
+        stringBuilder.append("\n\nCurrently playing:\n${ when(currentlyPlaying.first) {
             CacheType.Neuro -> "Neuro-sama: "
             CacheType.Evil -> "Evil Neuro: "
             CacheType.Duet -> "Neuro duet: "
@@ -73,4 +82,10 @@ class PlaylistManager(cacheManager: CacheManager) {
     }
 
     fun currentlyPlaying(): Pair<CacheType, CacheEntry> = currentlyPlaying
+
+    fun addSongWithQuery(query: String, type: CacheType): Pair<Int, Pair<CacheType, CacheEntry>>? {
+        val newSong = cacheManager.query(query, type) ?: return null
+        addPriority(newSong.second)
+        return newSong
+    }
 }

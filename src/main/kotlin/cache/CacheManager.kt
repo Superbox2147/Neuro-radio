@@ -2,6 +2,7 @@ package org.whatever.cache
 
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import me.xdrop.fuzzywuzzy.FuzzySearch
 import org.whatever.extraClasses.FilePaths
 import java.io.File
 
@@ -71,5 +72,23 @@ class CacheManager {
 
     operator fun get(type: CacheType): Cache = readCache(type)
 
-    fun random(): Pair<CacheType ,CacheEntry> = run { val type = CacheType.random(); Pair(type,readCache(type).random()) }
+    fun random(): Pair<CacheType, CacheEntry> = run { val type = CacheType.random(); Pair(type,readCache(type).random()) }
+
+    fun query(query: String, type: CacheType): Pair<Int, Pair<CacheType, CacheEntry>>? {
+        val cacheData = readCache(type)
+        val match = FuzzySearch.extractOne(query, cacheData.toStringList())
+        return if (match.score >= 75) {
+            Pair(match.score, Pair(type, cacheData.getByName(match.string)!!))
+        } else null
+    }
+
+    fun getFiveBestMatches(query: String, type: CacheType): List<Pair<Int, Pair<CacheType, CacheEntry>>> {
+        val cacheData = readCache(type)
+        val matches = FuzzySearch.extractSorted(query, cacheData.toStringList(), 5)
+        return buildList {
+            for (match in matches) {
+                add(Pair(match.score, Pair(type, cacheData.getByName(match.string)!!)))
+            }
+        }
+    }
 }

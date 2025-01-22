@@ -17,7 +17,8 @@ dependencies {
     implementation("dev.kord:kord-core:0.15.0")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("dev.kord:kord-voice:0.15.0")
-    implementation("com.sedmelluq:lavaplayer:1.3.77")
+    implementation("dev.arbjerg:lavaplayer:2.2.2")
+    implementation("me.xdrop:fuzzywuzzy:1.4.0")
 }
 
 tasks.test {
