@@ -77,16 +77,16 @@ class PlaylistManager(cacheManager: CacheManager) {
                     )
                 }
             } else {
-                for (i in 0..<10) {
+                for (i in priorityQueue.reversed().takeLast(10)) {
                     stringBuilder.append(
                         "\n${
-                            when (priorityQueue.reversed()[i].first) {
+                            when (i.first) {
                                 CacheType.Neuro -> "Neuro-sama: "
                                 CacheType.Evil -> "Evil Neuro: "
                                 CacheType.Duet -> "Neuro duet: "
                                 CacheType.OtherDuet -> "Other duet: "
                             }
-                        }${priorityQueue.reversed()[i].second.name}"
+                        }${i.second.name}"
                     )
                 }
             }

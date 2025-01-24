@@ -33,19 +33,19 @@ class CacheManager {
                 if (file.isFile) {
                     val fileName = file.name
                     if (fileName.startsWith("NeuroSama")) {
-                        neuroSongs.add(CacheEntry(removeExtension(fileName.removePrefix("NeuroSama").removePrefix("-")), file.path))
+                        neuroSongs.add(CacheEntry(removeExtension(fileName.removePrefix("NeuroSama").removePrefix("-").trim()), file.path))
                         continue
                     }
                     if (fileName.startsWith("EvilNeuro")) {
-                        evilSongs.add(CacheEntry(removeExtension(fileName.removePrefix("EvilNeuro").removePrefix("-")), file.path))
+                        evilSongs.add(CacheEntry(removeExtension(fileName.removePrefix("EvilNeuro").removePrefix("-").trim()), file.path))
                         continue
                     }
                     if ((fileName.startsWith("Neuro x ") || fileName.startsWith("Evil x ")) && (!fileName.startsWith("Neuro x Evil"))) {
-                        otherDuets.add(CacheEntry(removeExtension(fileName), file.path))
+                        otherDuets.add(CacheEntry(removeExtension(fileName).trim(), file.path))
                         continue
                     }
                     if (fileName.startsWith("Neuro x Evil")) {
-                        duetSongs.add(CacheEntry(removeExtension(fileName.removePrefix("Neuro x Evil ")), file.path))
+                        duetSongs.add(CacheEntry(removeExtension(fileName.removePrefix("Neuro x Evil ").trim()), file.path))
                     }
                 }
             }
