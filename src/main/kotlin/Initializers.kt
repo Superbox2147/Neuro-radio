@@ -125,7 +125,7 @@ suspend fun setCommandListeners(kord: Kord) {
             }
             val commandName = getCommandFullName(interaction.command)
             when (commandName.split(" ")[0]) {
-                "reload" -> cacheManager.updateCache()
+                "reload" -> reload(this)
                 "playlist" -> playlist(this)
                 "join" -> join(this)
                 "queue" -> queue(this)
