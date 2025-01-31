@@ -111,6 +111,10 @@ suspend fun setSlashCommands(kord: Kord) {
         "skip",
         "Skip the currently playing song"
     )
+    kord.createGlobalChatInputCommand(
+        "reconnect",
+        "Reconnect to the VC in case the bot is broken"
+    )
 }
 
 suspend fun setCommandListeners(kord: Kord) {
@@ -131,6 +135,7 @@ suspend fun setCommandListeners(kord: Kord) {
                 "queue" -> queue(this)
                 "search" -> search(this)
                 "skip" -> skip(this)
+                "reconnect" -> reconnect(this)
             }
         } catch (e: Exception) {
             println(e.toString())
